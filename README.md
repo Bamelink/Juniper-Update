@@ -13,7 +13,7 @@ This repository contains an **Ansible + Python** framework for automating Junipe
 1. **Install prerequisites**
    ```powershell
    python -m pip install ansible junos-eznc
-   ansible-galaxy collection install juniper.junos
+   ansible-galaxy collection install juniper.device
    ```
 
 2. **Populate inventory**

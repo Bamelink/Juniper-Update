@@ -20,7 +20,7 @@
     default_package: "junos-{{ item }}.tgz"
   tasks:
     - name: gather current version
-      junos_facts:
+      juniper.device.facts:
       register: facts
 
     - name: compute upgrade sequence
@@ -46,7 +46,7 @@
         dest: "logs/{{ inventory_hostname }}_version.json"
 
     - name: Collect pre‑check data
-      junos_command:
+      juniper.device.command:
         commands:
           - show interfaces terse
           - show isis neighbors
@@ -59,7 +59,7 @@
         dest: "logs/{{ inventory_hostname }}_pre.json"
 
     - name: Perform upgrade steps for each intermediate version
-      junos_install_os:
+      juniper.device.software:
         version: "{{ item }}"
         no_copy: yes
         reboot: yes
@@ -76,7 +76,7 @@
         timeout: "{{ reboot_timeout }}"
 
     - name: Collect post‑check data
-      junos_command:
+      juniper.device.command:
         commands:
           - show interfaces terse
           - show isis neighbors
@@ -105,7 +105,7 @@
     default_package: "junos-{{ item }}.tgz"
   tasks:
     - name: gather current version
-      junos_facts:
+      juniper.device.facts:
       register: facts
 
     - name: compute upgrade sequence
@@ -131,7 +131,7 @@
         dest: "logs/{{ inventory_hostname }}_version.json"
 
     - name: Collect pre‑check data
-      junos_command:
+      juniper.device.command:
         commands:
           - show interfaces terse
           - show isis neighbors
@@ -144,7 +144,7 @@
         dest: "logs/{{ inventory_hostname }}_pre.json"
 
     - name: Perform upgrade steps for each intermediate version
-      junos_install_os:
+      juniper.device.software:
         version: "{{ item }}"
         no_copy: yes
         reboot: yes
@@ -161,7 +161,7 @@
         timeout: "{{ reboot_timeout }}"
 
     - name: Collect post‑check data
-      junos_command:
+      juniper.device.command:
         commands:
           - show interfaces terse
           - show isis neighbors
