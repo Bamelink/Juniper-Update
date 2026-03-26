@@ -1,8 +1,0 @@
----
-# Ansible Galaxy requirements for this project
-collections:
-  - name: juniper.device
-    version: "*"
-
-roles:
-  # custom roles could be listed here
