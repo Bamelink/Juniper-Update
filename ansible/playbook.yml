@@ -1,0 +1,55 @@
+---
+# Main playbook orchestrating pre-checks, upgrade, post-checks, and report
+
+- name: Juniper Device Software Upgrade
+  hosts: juniper_devices
+  gather_facts: true
+  vars_files:
+    - group_vars/all/vault.yml
+  
+  vars:
+    check_results: {}
+  
+  tasks:
+    - name: Run pre-upgrade checks
+      include_role:
+        name: juniper_checks
+        tasks_from: pre_checks.yml
+      tags: precheck
+    
+    - name: Save pre-check results
+      set_fact:
+        check_results: "{{ check_results | combine({inventory_hostname: {'pre': pre_checks}}) }}"
+    
+    - name: Perform upgrade
+      include_role:
+        name: juniper_upgrade
+      tags: upgrade
+    
+    - name: Run post-upgrade checks
+      include_role:
+        name: juniper_checks
+        tasks_from: post_checks.yml
+      tags: postcheck
+    
+    - name: Save post-check results
+      set_fact:
+        check_results: "{{ check_results | combine({inventory_hostname: {'pre': pre_checks, 'post': post_checks}}, recursive=True) }}"
+    
+    - name: Generate comparison report
+      delegate_to: localhost
+      run_once: true
+      block:
+        - name: Write check results to file
+          copy:
+            content: "{{ check_results | to_nice_json }}"
+            dest: "/tmp/upgrade_checks_{{ ansible_date_time.iso8601_basic_short }}.json"
+          register: check_file
+        
+        - name: Generate colored report
+          command: "python3 lib/report_generator.py {{ check_file.dest }}"
+          register: report_output
+        
+        - name: Display report
+          debug:
+            msg: "{{ report_output.stdout }}"

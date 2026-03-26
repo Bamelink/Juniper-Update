@@ -1,0 +1,18 @@
+---
+# Defaults for juniper_upgrade role
+
+target_version: "23.4"
+ftp_server: "ftp.example.local"
+ftp_path: "images/junos"
+upgrade_timeout_minutes: 10
+
+# Device-specific package naming
+# Maps device model to package filename pattern (with {version} placeholder)
+# Example: For SRX345 upgrading to 23.4, the package would be: junos-srxme-23.4.tgz
+# ftp_user and ftp_password must be provided via vault
+juniper_package_names:
+  srx345: "junos-srxme-{version}.tgz"
+  ex2300: "junos-arm-{version}.tgz"
+  ex4100: "junos-install-ex-arm-64-{version}.tgz"
+  ex4300: "jinstall-ex-4300-{version}.tgz"
+  ex4400: "junos-install-ex-x86-64-{version}.tgz"

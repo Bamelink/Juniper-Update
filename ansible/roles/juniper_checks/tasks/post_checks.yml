@@ -1,0 +1,32 @@
+---
+# Post-upgrade checks: gather same metrics as pre-checks
+
+- name: Gather post-upgrade checks
+  block:
+    - name: Get interface status
+      juniper.junos.junos_command:
+        commands:
+          - show interfaces terse
+      register: post_interfaces
+    
+    - name: Get LLDP neighbors
+      juniper.junos.junos_command:
+        commands:
+          - show lldp neighbors
+      register: post_lldp
+    
+    - name: Get dot1x statistics
+      juniper.junos.junos_command:
+        commands:
+          - show dot1x statistics
+      register: post_dot1x
+    
+    - name: Save post-upgrade snapshot
+      set_fact:
+        post_checks:
+          timestamp: "{{ ansible_date_time.iso8601 }}"
+          interfaces: "{{ post_interfaces.stdout_lines[0] | default([]) }}"
+          lldp: "{{ post_lldp.stdout_lines[0] | default([]) }}"
+          dot1x: "{{ post_dot1x.stdout_lines[0] | default([]) }}"
+  
+  tags: postcheck

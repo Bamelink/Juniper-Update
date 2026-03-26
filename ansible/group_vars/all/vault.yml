@@ -1,0 +1,7 @@
+---
+# Ansible vault for FTP credentials
+# IMPORTANT: Encrypt this file with: ansible-vault encrypt group_vars/all/vault.yml
+# Then edit with: ansible-vault edit group_vars/all/vault.yml
+
+ftp_user: "your_ftp_username"
+ftp_password: "your_ftp_password"
